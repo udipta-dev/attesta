@@ -1,0 +1,3 @@
+Paste the text below as your FIRST message to Claude Code, after unzipping this
+package at the root of an empty repo. Everything Claude Code needs is in this folder.
+See CLAUDE.md and docs/PRD.md.
