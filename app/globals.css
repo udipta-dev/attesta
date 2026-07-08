@@ -27,3 +27,22 @@ body {
 * {
   box-sizing: border-box;
 }
+
+/* Guided walkthrough: pulse a red ring on the element the current step is about. */
+@keyframes tourpulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(235, 16, 0, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(235, 16, 0, 0);
+  }
+}
+
+.tour-active {
+  outline: 3px solid #eb1000;
+  outline-offset: 4px;
+  border-radius: 10px;
+  animation: tourpulse 1.6s ease-in-out infinite;
+  scroll-margin: 140px;
+}
