@@ -26,14 +26,21 @@ export function DocumentPreview({
     let cancelled = false;
 
     function drawHighlights(ctx: CanvasRenderingContext2D) {
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "#EB1000";
       ctx.font = "600 11px system-ui, sans-serif";
       for (const h of highlights.filter((r) => r.page === 1)) {
+        // Translucent fill + bold stroke so the changed region reads instantly.
+        ctx.fillStyle = "rgba(235, 16, 0, 0.14)";
+        ctx.fillRect(h.x, h.y, h.width, h.height);
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = "#EB1000";
         ctx.strokeRect(h.x, h.y, h.width, h.height);
         if (h.label) {
+          const tw = ctx.measureText(h.label).width;
+          const ly = h.y - 18 < 0 ? h.y + h.height + 4 : h.y - 18;
           ctx.fillStyle = "#EB1000";
-          ctx.fillText(h.label, h.x, Math.max(12, h.y - 4));
+          ctx.fillRect(h.x, ly, tw + 12, 16);
+          ctx.fillStyle = "#FFFFFF";
+          ctx.fillText(h.label, h.x + 6, ly + 12);
         }
       }
     }

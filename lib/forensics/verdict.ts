@@ -12,6 +12,7 @@ const TAMPER_SIGNALS = new Set<string>([
   "mod-after-create",
   "producer-editor",
   "font-subset-mismatch",
+  "revision-diff",
   "ela-region",
   "broken-credential",
 ]);

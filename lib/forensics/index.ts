@@ -13,6 +13,7 @@ import { sha256Hex, attachReceipt } from "../crypto/receipt";
 import { checkCredential } from "./c2pa";
 import { readPdfMeta } from "./pdfMeta";
 import { detectIncrementalUpdates } from "./incrementalUpdates";
+import { analyzeRevisionDiff } from "./revisionDiff";
 import { analyzeFonts } from "./fonts";
 import { errorLevelAnalysis } from "./ela";
 import { decideVerdict } from "./verdict";
@@ -72,10 +73,18 @@ export async function analyze(file: File): Promise<AnalysisResult> {
         weight: 0,
       });
     }
-    evidence.push(...detectIncrementalUpdates(bytes));
+    const incremental = detectIncrementalUpdates(bytes);
+    evidence.push(...incremental);
     const fonts = await analyzeFonts(bytes);
     evidence.push(...fonts.evidence);
     highlights.push(...fonts.highlights);
+    // Only rebuild-and-diff when the file actually carries a later revision, so
+    // this never fires (or draws a box) on a clean single-save document.
+    if (incremental.some((e) => e.signal === "incremental-update")) {
+      const rev = await analyzeRevisionDiff(bytes);
+      evidence.push(...rev.evidence);
+      highlights.push(...rev.highlights);
+    }
   } else {
     const ela = await errorLevelAnalysis(file);
     evidence.push(...ela.evidence);
